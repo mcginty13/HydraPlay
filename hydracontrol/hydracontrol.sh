@@ -6,7 +6,7 @@ NUMBER_OF_STREAMS=3
 ##
 install_requirements(){
   apt-get update
-  apt-get install mopidy mopidy-mpd mopidy-musicbox mopidy-soundcloud mopidy-spotify pulseaudio wget unzip
+  apt-get install mopidy mopidy-soundcloud mopidy-spotify pulseaudio wget unzip
   wget 'https://github.com/badaix/snapcast/releases/download/v'$SNAPCASTVERSION'/snapserver_'$SNAPCASTVERSION'-1_amd64.deb'
   dpkg -i --force-all 'snapserver_'$SNAPCASTVERSION'-1_amd64.deb'
   apt-get -f install -y
