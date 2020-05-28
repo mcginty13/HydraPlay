@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import {SnapcastService} from '../../services/snapcast.service';
-import { MediaComponent  } from '../media/media.component';
-import {MopidyService} from '../../services/mopidy.service';
-import {MessageService} from '../../services/message.service';
+import { SnapcastService } from '../../services/snapcast.service';
+import { MediaComponent } from '../media/media.component';
+import { MopidyService } from '../../services/mopidy.service';
+import { MessageService } from '../../services/message.service';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class PlayerComponent implements OnInit {
   @Output() onCallMediaModal = new EventEmitter();
 
   public currentAlbumCover: string;
-  public  currentArtist: string;
+  public currentArtist: string;
   public currentTitle: string;
 
   constructor(private messageService: MessageService, private mopidyService: MopidyService, private snapcastService: SnapcastService, private media: MediaComponent) {
@@ -34,46 +34,46 @@ export class PlayerComponent implements OnInit {
   ngOnInit() {
 
 
-      this.messageService.on<string>('Mopidy')
-          .subscribe(event => {
-              if (event.streamId == this.group.stream_id) {
-                  console.log(event.label);
-                  this.mopidy = this.mopidyService.getStreamById(event.streamId);
-                  switch (event.label) {
-                      case 'event:online':
-                          this.updateCurrentState();
-                          this.updateTrackInfo();
-                          break;
-                      case 'event:playbackStateChanged':
-                          this.updateCurrentState();
-                          break;
-                      case 'event:streamTitleChanged':
-                      case 'event:tracklistChanged':
-                          this.updateTrackInfo();
-                          break;
-                  }
-              }
-          });
+    this.messageService.on<string>('Mopidy')
+      .subscribe(event => {
+        if (event.streamId == this.group.stream_id) {
+          console.log(event.label);
+          this.mopidy = this.mopidyService.getStreamById(event.streamId);
+          switch (event.label) {
+            case 'event:online':
+              this.updateCurrentState();
+              this.updateTrackInfo();
+              break;
+            case 'event:playbackStateChanged':
+              this.updateCurrentState();
+              break;
+            case 'event:streamTitleChanged':
+            case 'event:tracklistChanged':
+              this.updateTrackInfo();
+              break;
+          }
+        }
+      });
 
-      this.messageService.on<string>('Snapcast')
-          .subscribe(jsonrpc => {
-            if (jsonrpc) {
-                switch (jsonrpc.method) {
-                    case 'Client.OnVolumeChanged':
-                        if (jsonrpc.params.id === this.client.id) {
-                            this.updateVolume(jsonrpc.params.volume);
-                        }
-                        break;
-                    case 'Group.OnStreamChanged':
-                        if (jsonrpc.params.id === this.group.id) {
-                            this.group.stream_id = jsonrpc.params.stream_id;
-                            this.mopidy = this.mopidyService.getStreamById(this.group.stream_id);
-                            this.updateTrackInfo();
-                        }
-                        break;
-                }
-            }
-          });
+    this.messageService.on<string>('Snapcast')
+      .subscribe(jsonrpc => {
+        if (jsonrpc) {
+          switch (jsonrpc.method) {
+            case 'Client.OnVolumeChanged':
+              if (jsonrpc.params.id === this.client.id) {
+                this.updateVolume(jsonrpc.params.volume);
+              }
+              break;
+            case 'Group.OnStreamChanged':
+              if (jsonrpc.params.id === this.group.id) {
+                this.group.stream_id = jsonrpc.params.stream_id;
+                this.mopidy = this.mopidyService.getStreamById(this.group.stream_id);
+                this.updateTrackInfo();
+              }
+              break;
+          }
+        }
+      });
   }
 
   /**
@@ -83,26 +83,26 @@ export class PlayerComponent implements OnInit {
   private updateCurrentState() {
     if (this.mopidy) {
       this.mopidy.getCurrentState().then(state => {
-          if (state === 'playing') {
-            this.isPlaying = true;
-          } else {
-            this.isPlaying = false;
-          }
+        if (state === 'playing') {
+          this.isPlaying = true;
+        } else {
+          this.isPlaying = false;
+        }
       });
     }
   }
 
   public pause() {
     if (this.isPlaying) {
-        this.mopidy.pause();
-        this.isPlaying = false;
+      this.mopidy.pause();
+      this.isPlaying = false;
     }
   }
 
   public play() {
     if (!this.isPlaying) {
-        this.mopidy.play();
-        this.isPlaying = true;
+      this.mopidy.play();
+      this.isPlaying = true;
     }
   }
 
@@ -115,16 +115,19 @@ export class PlayerComponent implements OnInit {
   }
 
   public updateTrackInfo() {
-        return this.mopidy.getCurrentTrack().then(track => {
-            this.mopidy.getCover(track.uri).then(imageUri => {
-                this.currentAlbumCover = imageUri;
-                this.currentArtist = track.album.name;
-                this.currentTitle = track.name;
-            });
+    return this.mopidy.getCurrentTrack().then(track => {
+      this.mopidy.getCover(track.uri).then(imageUri => {
+        if (imageUri.startsWith('/local')) {
+          imageUri = "http://192.168.0.67:6681" + imageUri;
+        }
+        this.currentAlbumCover = imageUri;
+        this.currentArtist = track.album.name;
+        this.currentTitle = track.name;
+      });
 
-        }).catch(err => {
-            console.error(err);
-        });
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
 
@@ -133,7 +136,7 @@ export class PlayerComponent implements OnInit {
    */
 
   public changeVolume(value) {
-    let volume = { percent: this.client.config.volume.percent, muted:  this.client.config.volume.muted };
+    let volume = { percent: this.client.config.volume.percent, muted: this.client.config.volume.muted };
     switch (value) {
       case 'up':
         if (volume.percent < 100) {
