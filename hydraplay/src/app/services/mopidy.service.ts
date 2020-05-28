@@ -112,7 +112,7 @@ class MopidyPlayer {
     tracklist.push(track.uri);
     this.socket.tracklist.clear().then(() => {
       this.socket.tracklist.add({ uris: tracklist }).then(tltracks => {
-        this.socket.playback.play(tltracks[0].tlid);
+        this.socket.playback.play({tlid: tltracks[0].tlid});
         //this.socket.library.get_images()
         this.isPlaying = true;
       });
