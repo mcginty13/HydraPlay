@@ -62,7 +62,7 @@ export class MediaComponent implements OnInit {
           _tracks.forEach(track => {
             this.mopidy.getCover(track.uri).then(imageUri => {
               if (imageUri.startsWith('/local')) {
-                imageUri = "http://192.168.0.67:6680" + imageUri;
+                imageUri = "http://192.168.0.67:6681" + imageUri;
               }
               track['coverArt'] = imageUri;
               this.playlist.push(track);
