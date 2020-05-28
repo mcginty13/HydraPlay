@@ -101,7 +101,7 @@ class MopidyPlayer {
       return el.replace(/"/g, '');
     });
 
-    return this.socket.library.search({'any': `${queryElements}`}).then(result => {
+    return this.socket.library.search({'query':{'any': `${queryElements}`}}).then(result => {
       return result;
     });
 
