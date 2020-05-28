@@ -22,7 +22,7 @@ hostname = 0.0.0.0
 port=${MPD_PORT}
 
 [soundcloud]
-enabled = false
+enabled = true
 
 [spotify]
 enabled = false
@@ -38,6 +38,11 @@ port=${HTTP_PORT}
 zeroconf = Mopidy ${HTTP_PORT}
 csrf_protection = false
 allowed_origins = ${HTTP_IP}
+
+[jellyfin]
+hostname = 192.168.0.29:8096
+username = mopidy
+password = mopidy
 
 [musicbox_webclient]
 enabled = true

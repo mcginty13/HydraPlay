@@ -1,5 +1,5 @@
 #!/bin/bash
-SNAPCASTVERSION=0.16.0
+SNAPCASTVERSION=0.19.0-1
 NUMBER_OF_STREAMS=3
 
 ####
@@ -7,11 +7,11 @@ NUMBER_OF_STREAMS=3
 ##
 install_requirements(){
   apt-get update
-  apt-get insteall mopidy mopidy-soundcloud mopidy-spotify pulseaudio wget unzip
-  wget 'https://github.com/badaix/snapcast/releases/download/v'$SNAPCASTVERSION'/snapserver_'$SNAPCASTVERSION'_armhf.deb'
-  dpkg -i --force-all 'snapserver_'$SNAPCASTVERSION'_armhf.deb'
+  apt-get install mopidy mopidy-mpd mopidy-musicbox mopidy-soundcloud mopidy-spotify pulseaudio wget unzip
+  wget 'https://github.com/badaix/snapcast/releases/download/v'$SNAPCASTVERSION'/snapserver_'$SNAPCASTVERSION'_amd64.deb'
+  dpkg -i --force-all 'snapserver_'$SNAPCASTVERSION'_amd64.deb'
   apt-get -f install -y
-  rm snapserver_'$SNAPCASTVERSION'_armhf.deb
+  rm snapserver_'$SNAPCASTVERSION'_amd64.deb
 }
 
 ####
@@ -176,9 +176,8 @@ start_services(){
 install_hydra_release(){
    wget https://github.com/mariolukas/HydraPlay/releases/latest/download/hydraplay.zip
    rm -R hydraplay
-   unzip hydraplay.zip -d /home/pi/hydraplay
+   unzip hydraplay.zip -d /home/hydra/hydraplay
    rm hydraplay.zip
-
    create_mopidy_snapserver_config
 }
 
