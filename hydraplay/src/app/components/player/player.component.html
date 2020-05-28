@@ -1,6 +1,6 @@
 <div class="controller">
     <div>
-      <div class="top"  [ngStyle]="{'background-image': 'url(192.168.0.67:6681' + currentAlbumCover + ')'}" (click)="onClickShowStreamModal();">
+      <div class="top"  [ngStyle]="{'background-image': 'url(http://192.168.0.67:6681' + currentAlbumCover + ')'}" (click)="onClickShowStreamModal();">
       <div class="trackInfo" >
 
           <h1 *ngIf="client.config.name else notShow">{{client.config.name}}</h1>
