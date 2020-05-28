@@ -23,6 +23,9 @@ export class StreamComponent implements OnInit {
     mopidy.getCurrentTrack().then(track => {
 
         mopidy.getCover(track.uri).then(imageUri => {
+          if (imageUri.startsWith('/local')) {
+            imageUri = "http://192.168.0.67:6681" + imageUri;
+          }
           this.cover = imageUri;
           this.name = track.album.name;
         });
