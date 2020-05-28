@@ -1,14 +1,13 @@
 #!/bin/bash
 SNAPCASTVERSION=0.19.0
 NUMBER_OF_STREAMS=3
-
 ####
 # Installs all required packages and software.
 ##
 install_requirements(){
   apt-get update
   apt-get install mopidy mopidy-mpd mopidy-musicbox mopidy-soundcloud mopidy-spotify pulseaudio wget unzip
-  wget 'https://github.com/badaix/snapcast/releases/download/v'$SNAPCASTVERSION'/snapserver_'$SNAPCASTVERSION'_amd64.deb'
+  wget 'https://github.com/badaix/snapcast/releases/download/v'$SNAPCASTVERSION'/snapserver_'$SNAPCASTVERSION'-1_amd64.deb'
   dpkg -i --force-all 'snapserver_'$SNAPCASTVERSION'_amd64.deb'
   apt-get -f install -y
   rm snapserver_'$SNAPCASTVERSION'_amd64.deb
