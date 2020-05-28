@@ -1,12 +1,12 @@
-import { ElementRef, ViewChild, Injectable, Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { trigger, style, animate, transition} from '@angular/animations';
-import {SnapcastService} from '../../services/snapcast.service';
-import {forEach} from '@angular/router/src/utils/collection';
-import { map, tap} from 'rxjs/operators';
-import {arrayify} from 'tslint/lib/utils';
+import { ElementRef, ViewChild, Injectable, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { trigger, style, animate, transition } from '@angular/animations';
+import { SnapcastService } from '../../services/snapcast.service';
+import { forEach } from '@angular/router/src/utils/collection';
+import { map, tap } from 'rxjs/operators';
+import { arrayify } from 'tslint/lib/utils';
 import { Observable, Subject, of } from 'rxjs';
-import {startTimeRange} from '@angular/core/src/profile/wtf_impl';
-import {MopidyService} from '../../services/mopidy.service';
+import { startTimeRange } from '@angular/core/src/profile/wtf_impl';
+import { MopidyService } from '../../services/mopidy.service';
 
 @Component({
   selector: 'app-media',
@@ -32,13 +32,13 @@ export class MediaComponent implements OnInit {
   private selectedGroup: any;
   private mopidy: any;
 
-  constructor(private snapcastService: SnapcastService, private mopidyService:MopidyService) {
+  constructor(private snapcastService: SnapcastService, private mopidyService: MopidyService) {
     this.visible = true;
 
   }
 
   ngOnInit() {
-     this.streams = this.snapcastService.getStreams();
+    this.streams = this.snapcastService.getStreams();
   }
 
   public show(group: object, mopidy: any) {
@@ -53,35 +53,38 @@ export class MediaComponent implements OnInit {
   }
 
   public search(searchValue) {
-      this.clearSearch();
-      this.mopidy = this.mopidyService.getStreamById(this.group.stream_id);
-      this.mopidy.search(searchValue).then(result => {
-        result.forEach((searchURI, index) => {
-          if (result[index].tracks) {
-            let _tracks = result[index].tracks;
-            _tracks.forEach(track => {
-                this.mopidy.getCover(track.uri).then(imageUri => {
-                    track['coverArt'] = imageUri;
-                    this.playlist.push(track);
-                });
+    this.clearSearch();
+    this.mopidy = this.mopidyService.getStreamById(this.group.stream_id);
+    this.mopidy.search(searchValue).then(result => {
+      result.forEach((searchURI, index) => {
+        if (result[index].tracks) {
+          let _tracks = result[index].tracks;
+          _tracks.forEach(track => {
+            this.mopidy.getCover(track.uri).then(imageUri => {
+              if (imageUri.startsWith('/local')) {
+                imageUri = "http://192.168.0.67:6680" + imageUri;
+              }
+              track['coverArt'] = imageUri;
+              this.playlist.push(track);
             });
-          }
-        });
+          });
+        }
       });
+    });
 
-      this.hideKeyboard();
+    this.hideKeyboard();
   }
 
   private hideKeyboard() {
-      this.searchBox.nativeElement.setAttribute('readonly', 'readonly'); // Force keyboard to hide on input field.
-      this.searchBox.nativeElement.setAttribute('disabled', 'true'); // Force keyboard to hide on textarea field.
-      let that = this;
-      setTimeout(function() {
-          that.searchBox.nativeElement.blur();  //actually close the keyboard
-          // Remove readonly attribute after keyboard is hidden.
-          that.searchBox.nativeElement.removeAttribute('readonly');
-          that.searchBox.nativeElement.removeAttribute('disabled');
-      }, 100);
+    this.searchBox.nativeElement.setAttribute('readonly', 'readonly'); // Force keyboard to hide on input field.
+    this.searchBox.nativeElement.setAttribute('disabled', 'true'); // Force keyboard to hide on textarea field.
+    let that = this;
+    setTimeout(function () {
+      that.searchBox.nativeElement.blur();  //actually close the keyboard
+      // Remove readonly attribute after keyboard is hidden.
+      that.searchBox.nativeElement.removeAttribute('readonly');
+      that.searchBox.nativeElement.removeAttribute('disabled');
+    }, 100);
   }
 
   private filterPlaylistByURI(uri) {
